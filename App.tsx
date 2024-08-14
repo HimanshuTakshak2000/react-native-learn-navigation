@@ -5,12 +5,13 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  TextInput
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -40,10 +41,12 @@ function App(): React.JSX.Element {
         }
       }>
 
-        <Stack.Screen name='Home' component={Home} options={
+        <Stack.Screen name='Login' component={LoginScreen} initialParams={{defaultText:'this is the initial param send by login screen', heading:'Initial Param'}} />
+
+        <Stack.Screen name='Home' component={Home} initialParams={{itemId: 50, otherParam: `New Update`,}} options={
 
           {
-            title:"Name Of Title i.e \' Home \'",
+            title:"Home",
             headerStyle:{
               backgroundColor:'skyblue',
                       
@@ -59,8 +62,6 @@ function App(): React.JSX.Element {
           }
         } />
 
-        <Stack.Screen name='Login' component={LoginScreen} />
-
         <Stack.Screen name='Detail' component={DetailsScreen} />
       </Stack.Navigator>
 
@@ -68,35 +69,18 @@ function App(): React.JSX.Element {
   );
 }
 
-const Home = (prop: any)=>{
+const LoginScreen = ({navigation}: any)=>{
   // console.log('wwe',prop.navigation);
   
   return(
     <View style={style.homeContainer}>
-      <Text style ={style.homeContainerText}>Home Screen</Text>
+      <Text style ={style.homeContainerText}>Login Screen</Text>
 
-      <TouchableOpacity style={style.btn} onPress={()=> (prop.navigation).navigate('Detail')}>
-        <Text style={style.btnText}>Go to Details with navigate function</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={style.btn} onPress={()=> (prop.navigation).push('Detail')}>
-        <Text style={style.btnText}>Go to Details with push function</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={style.btn} onPress={()=> (prop.navigation).push('Home')}>
-        <Text style={style.btnText}>Go to Home again with push function</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={style.btn} onPress={()=> (prop.navigation).goBack()}>
-        <Text style={style.btnText}>GoBack to Login with goBack function</Text> 
-      </TouchableOpacity>
-
-      <TouchableOpacity style={style.btn} onPress={()=> (prop.navigation).navigate('Login')}>
-        <Text style={style.btnText}>GoBack to Login with navigate function</Text> 
-      </TouchableOpacity>
-
-      <TouchableOpacity style={style.btn} onPress={()=> (prop.navigation).popToTop()}>
-        <Text style={style.btnText}>GoBack to Login with popToTop function</Text> 
+      <TouchableOpacity style={style.btn} onPress={()=> navigation.navigate('Home', {
+            itemId: 69,
+            otherParam: `anything you want!!!!!\nYou can pass here.`,
+          })}>
+        <Text style={style.btnText}>Go to Home</Text>
       </TouchableOpacity>
 
     </View>
@@ -104,52 +88,59 @@ const Home = (prop: any)=>{
   )
 }
 
-// const Home = ({navigation}: any)=>{
-//   return(
-//     <View style={style.homeContainer}>
-//       <Text style ={style.homeContainerText}>Home Screen</Text>
-//       <TouchableOpacity style={style.btn} onPress={()=> navigation.push('Home')}>
-//         <Text style={style.btnText}>Go to home again....</Text>
-//       </TouchableOpacity>
-//     </View>
+const Home = (prop: any)=>{
+  const {itemId, otherParam} = prop.route.params;
+  const [yourName, setYourName] = useState('');
+  const [yourRollNo, setYourRollNo] = useState('');
 
-//   )
-// }
+  const onClickHandler = ()=>{
+    prop.navigation.navigate('Detail',{yourName, yourRollNo}); 
+    setYourName('');
+    setYourRollNo('');
+  }
 
-function LoginScreen(props : any){
   return(
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor:'gray' }}>
-      <Text style={{fontSize:30}}>Login Screen</Text>
-      <TouchableOpacity style={style.btn} onPress={()=> props.navigation.navigate('Home')}>
-        <Text style={style.btnText}>Go to Home</Text>
+    <View style={style.homeContainer}>
+      <Text style ={style.homeContainerText}>Home Screen</Text>
+
+      <View style={{margin:10, backgroundColor:'white', padding:10, borderRadius:5}}>
+        <Text style ={{color:'black', fontSize:15}}>These are the params from Login Screen(these are inital param after firstt render) :- </Text>
+        <Text style ={{color:'black', fontSize:15}}>ItemId :-- {itemId}</Text>
+        <Text style ={{color:'black', fontSize:15}}>otherParam :-- {otherParam}</Text>
+      </View>
+
+      <TextInput placeholder='Enter Your Name' value={yourName} style={{backgroundColor:'brown', margin:10, width:310, borderRadius:10}} onChangeText={(text)=> setYourName(text)} />
+
+      <TextInput placeholder='Enter Your Roll No' value={yourRollNo} style={{backgroundColor:'brown', margin:10, width:310, borderRadius:10}} onChangeText={(text)=> setYourRollNo(text)} />
+
+      <TouchableOpacity style={style.btn} onPress={onClickHandler}>
+        <Text style={style.btnText}>Go to Details</Text>
       </TouchableOpacity>
+
     </View>
-  );
+
+  )
 }
 
-function DetailsScreen(props : any){
+
+function DetailsScreen({navigation, route}: any){
+
+  // console.log("route :- ",route);
+  // console.log("route.params :- ",route.params);
+  const {yourName, yourRollNo} = route.params;
+
   return(
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor:'gray' }}>
       <Text style={{fontSize:30}}>Details Screen</Text>
 
-      <TouchableOpacity style={style.btn} onPress={()=> props.navigation.navigate('Login')}>
-        <Text style={style.btnText}>Go to Login with naviagte function</Text>
-      </TouchableOpacity>
+      <View style={{margin:10, backgroundColor:'white', padding:10, borderRadius:5}}>
+        <Text style ={{color:'black', fontSize:15}}>These are the params from Home Screen :- </Text>
+        <Text style ={{color:'black', fontSize:15}}>Name :-- {yourName}</Text>
+        <Text style ={{color:'black', fontSize:15}}>Roll No :-- {yourRollNo}</Text>
+      </View>
 
-      <TouchableOpacity style={style.btn} onPress={()=> props.navigation.push('Login')}>
-        <Text style={style.btnText}>Go to Home with push function</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={style.btn} onPress={()=> props.navigation.navigate('Home')}>
-        <Text style={style.btnText}>Go to Home with naviagte function</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={style.btn} onPress={()=> (props.navigation).goBack()}>
-        <Text style={style.btnText}>GoBack to Home with goBack function</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={style.btn} onPress={()=> (props.navigation).popToTop()}>
-        <Text style={style.btnText}>GoBack to Login with popToTop function</Text>
+      <TouchableOpacity style={style.btn} onPress={()=> navigation.navigate('Home')}>
+        <Text style={style.btnText}>Go to Home</Text>
       </TouchableOpacity>
 
     </View>
@@ -190,16 +181,14 @@ const style = StyleSheet.create({
 export default App;
 
 /*
-  Note :- 1) navigation.navigate('RouteName') pushes a new route to the native stack navigator if it's not already in the stack, otherwise it jumps to that screen. When you call navigate it first tries to find an existing route with that name,\ and only pushes a new route if there isn't yet one on the stack.
+  Note :- 1) navigate and push accept an optional second argument to let you pass parameters to the route you are navigating to. For example: navigation.navigate('RouteName', { paramName: 'value' }).
 
-  2) We can call navigation.push('RouteName') as many times as we like and it will continue pushing routes. Each time you call push we add a new route to the navigation stack.
+  2) You can read the params through route.params inside a screen.
 
-  3) The header bar will automatically show a back button but you can programmatically go back by calling navigation.goBack(). This function only remove one screen . On Android, the hardware back button just works as expected.
+  3) You can update the screen's params with navigation.setParams.
 
-  4) You can go back to an existing screen in the stack with navigation.navigate('RouteName'), and you can go back to the first screen in the stack with navigation.popToTop().
+  4) Initial params can be passed via the initialParams prop on Screen.
 
-  5) The navigation prop is available to all screen components (components defined as screens in route configuration and rendered by React Navigation as a route).
-
-  6) We generally use navigation.navigate() function rather then naviagtion.push() function as naviagtion.push() function always push another route regardless of it's current route and your naviagtion.goBack() function will not work properly for naviagtion.push() function.
+  5) Params should contain the minimal data required to show a screen, nothing more.
 
 */
