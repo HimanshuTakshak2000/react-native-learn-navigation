@@ -13,6 +13,7 @@ import {
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Drawer = createDrawerNavigator();
 
@@ -35,7 +36,7 @@ function App(): React.JSX.Element {
 
       }}>
 
-        <Drawer.Screen name='Home' component={Home} />
+        <Drawer.Screen name='Home' component={Home} options={{drawerIcon:({focused,size,color}) => ( <Icon name='home' color={focused ? 'pink' : color} size={size} />)}} />
 
         <Drawer.Screen name='Detail' component={Detail} options={{
           headerStyle: {
@@ -45,6 +46,9 @@ function App(): React.JSX.Element {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
+
+          drawerIcon:({focused,size,color}) => ( <Icon name='home' color={focused ? 'pink' : color} size={size} />)
+
         }} />
 
       </Drawer.Navigator>
@@ -57,7 +61,8 @@ const Home = ()=> {
 
   return (
     <View style = { style.screenContainer}>
-      <Text style = { style.screenContainerText}>Home Screen</Text>
+      <Icon name="rocket" size={30} color="white" />
+      <Text style = { style.screenContainerText}> Home Screen</Text>
     </View>
   )
 
@@ -66,6 +71,7 @@ const Home = ()=> {
 function Detail(){
   return (
     <View style = { style.screenContainer}>
+      <Icon name="rocket" size={30} color="white" />
       <Text style = { style.screenContainerText}>Detail Screen</Text>
     </View>
   )
