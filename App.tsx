@@ -4,21 +4,17 @@
  *
  * @format
  */
-
-import React, { useState } from 'react';
+import 'react-native-gesture-handler';
 import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  TextInput
 } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
-
-const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 function App(): React.JSX.Element {
 
@@ -26,7 +22,7 @@ function App(): React.JSX.Element {
   return (
     <NavigationContainer>
 
-      <Tab.Navigator screenOptions={{
+      <Drawer.Navigator screenOptions={{
         headerStyle: {
           backgroundColor: '#f4511e',
         
@@ -36,15 +32,12 @@ function App(): React.JSX.Element {
           fontWeight: 'bold',
         },
         headerTitleAlign:'center',
-        tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'skyblue',
-
 
       }}>
 
-        <Tab.Screen name='Home' component={Home} />
+        <Drawer.Screen name='Home' component={Home} />
 
-        <Tab.Screen name='Detail' component={Detail} options={{
+        <Drawer.Screen name='Detail' component={Detail} options={{
           headerStyle: {
             backgroundColor: 'pink',
           },
@@ -52,10 +45,9 @@ function App(): React.JSX.Element {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
-          tabBarBadge: 3 
         }} />
 
-      </Tab.Navigator>
+      </Drawer.Navigator>
 
     </NavigationContainer>
   );
